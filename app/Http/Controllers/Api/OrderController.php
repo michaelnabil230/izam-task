@@ -21,10 +21,12 @@ class OrderController
      */
     public function index(Request $request): JsonResponse
     {
-        $key = "orders-{$request->integer('page', 1)}-{$request->user()->id}";
+        $user = auth()->user();
 
-        $orders = cache()->remember($key, now()->addMinutes(5), function () {
-            return Order::query()
+        $key = "orders-{$request->integer('page', 1)}-{$user->id}";
+
+        $orders = cache()->remember($key, now()->addMinutes(5), function () use ($user) {
+            return $user->orders()
                 ->with('products')
                 ->latest()
                 ->paginate();
@@ -78,6 +80,11 @@ class OrderController
      */
     public function show(Order $order): JsonResponse
     {
+        abort_if(
+            $order->user_id !== auth()->id(),
+            Response::HTTP_FORBIDDEN,
+        );
+
         $order->load('products.category');
 
         return response()->json([
