@@ -62,8 +62,8 @@ This system delivers a comprehensive solution for managing products and handling
 ### 1️⃣ Clone the Repository
 
 ```bash
-git clone [repository-url]
-cd [project-name]
+git clone https://github.com/michaelnabil230/izam-task.git
+cd izam-task
 ```
 
 ---
