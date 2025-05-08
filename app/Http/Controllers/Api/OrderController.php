@@ -46,14 +46,19 @@ class OrderController
             $products = Product::query()
                 ->whereIn('id', $productsCollect->pluck('id'))
                 ->get()
-                ->filter(fn(Product $product): bool => (int) $productsCollect->where('id', $product->id)->value('quantity', 1) <= $product->quantity);
+                ->filter(fn (Product $product): bool => (int) $productsCollect->where('id', $product->id)->value('quantity', 1) <= $product->quantity);
 
             $order = auth()->user()->orders()->create([
                 'total_price' => $products->sum('price') * $productsCollect->sum('quantity'),
                 'status' => OrderStatus::PENDING,
             ]);
 
-            $products = $products->mapWithKeys(fn(Product $product): array => [
+            $products->each(fn (Product $product) => $product->decrement(
+                'quantity',
+                $productsCollect->where('id', $product->id)->value('quantity', 1)
+            ));
+
+            $products = $products->mapWithKeys(fn (Product $product): array => [
                 $product->id => [
                     'price' => $product->price,
                     'quantity' => $productsCollect->where('id', $product->id)->value('quantity', 1),

@@ -47,6 +47,8 @@ const Cart: React.FC = () => {
             }
 
             clearCart();
+
+            navigator('/orders');
         } catch (error) {
             console.error('Error fetching products:', error);
         } finally {

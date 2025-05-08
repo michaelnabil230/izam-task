@@ -45,10 +45,18 @@ export namespace App {
         export interface Order {
             id: number;
             total_price: number;
-            status: string;
+            status: OrderStatus;
             products: Product[];
             created_at: string;
             updated_at: string;
+        }
+    }
+
+    export namespace Enums {
+        export enum OrderStatus {
+            PENDING = 'pending',
+            COMPLETED = 'completed',
+            CANCELLED = 'cancelled',
         }
     }
 

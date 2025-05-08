@@ -26,7 +26,7 @@ final class ProductResource extends JsonResource
             'image' => $this->image,
             'category' => $this->whenLoaded(
                 'category',
-                fn() => CategoryResource::make($this->category),
+                fn () => CategoryResource::make($this->category),
             ),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
